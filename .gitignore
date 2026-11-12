@@ -1,0 +1,19 @@
+# ---- personal data: NEVER commit ----
+config.json
+*.db
+*.db-*
+*.sqlite
+*.log
+*.backup
+.sync.lock
+.python-path
+.env
+*.pem
+*.key
+
+# ---- system / editor ----
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/
+.idea/
