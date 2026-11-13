@@ -1,6 +1,7 @@
 # Uni Mail Assistant - setup for Windows (BETA). Started by setup.bat.
 # Passwords go into Windows Credential Manager, never into files.
-$ErrorActionPreference = "Stop"
+# "Continue": harmless warnings from Python/pip must not stop the setup; real errors are checked via $LASTEXITCODE
+$ErrorActionPreference = "Continue"
 $Dir = Split-Path -Parent $PSScriptRoot
 Set-Location $Dir
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8

@@ -91,7 +91,12 @@ REDACTIONS = [
     (re.compile(r"\b(?:\d[ -]?){13,19}\b"), "[HIDDEN-NUMBER]"),
     (re.compile(r"(?:€|EUR)\s?\d[\d.,]*|\d[\d.,]*\s?(?:€|(?:EUR|Euro)\b)", re.I), "[HIDDEN-AMOUNT]"),
     (re.compile(r"\b\d{6,9}\b"), "[HIDDEN-ID]"),
-    (re.compile(r"(?i)\b(passwor[td]|kennwort|pin|tan|code)\s*[:=]\s*\S+"), r"\1: [HIDDEN]"),
+    # secrets after a keyword: "code: X", "code is X", "Ihr Code lautet X", "PIN 1234", "token=X" ...
+    (re.compile(r"(?i)\b(passwor[td]|kennwort|pin|tan|code|token|teilnahmecode|zugangscode|bestätigungscode|"
+                r"verification code|access code|participation code|login)\b"
+                r"(\s*(?:[:=]|is|ist|lautet|lauten|was|war)?\s*)(?=\S*\d)[A-Za-z0-9_\-]{4,}"), r"\1\2[HIDDEN]"),
+    # any remaining long mix of letters+digits (codes, tokens, references), e.g. a1B2c3D4e5
+    (re.compile(r"\b(?=[A-Za-z0-9]*\d)(?=[A-Za-z0-9]*[a-z])(?=[A-Za-z0-9]*[A-Z])[A-Za-z0-9]{8,}\b"), "[HIDDEN-CODE]"),
 ]
 URL_RE = re.compile(r"https?://[^\s<>\"')\]]+")
 

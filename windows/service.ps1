@@ -29,7 +29,7 @@ switch ($Mode) {
             $ls = New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
                   -ExecutionTimeLimit ([TimeSpan]::Zero) -RestartCount 999 -RestartInterval (New-TimeSpan -Minutes 1)
             $la = New-ScheduledTaskAction -Execute $Pyw -Argument "`"$Dir\helper.py`" listen" -WorkingDirectory $Dir
-            Register-ScheduledTask -TaskName $ListenTask -Action $la -Trigger (New-ScheduledTaskTrigger -AtLogOn) -Settings $ls -Force | Out-Null
+            Register-ScheduledTask -TaskName $ListenTask -Action $la -Trigger (New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME) -Settings $ls -Force | Out-Null
             Start-ScheduledTask -TaskName $ListenTask
             Write-Host "  OK  Telegram: buttons and questions are answered right away."
         }

@@ -21,6 +21,10 @@ OTHER_PROVIDERS = {
 }
 
 
+if os.name == "nt":
+    os.system("")  # turns on colours/bold text in the Windows console
+
+
 def title(t):
     print("\n\033[1m%s\033[0m" % t)
 
