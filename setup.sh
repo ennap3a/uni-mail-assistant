@@ -21,6 +21,9 @@ if [ -z "$PY" ]; then
 fi
 echo "$PY" > .python-path
 echo "  ✅ $("$PY" --version)"
+# truststore: let Python check certificates like macOS/your browser does (fixes antivirus/VPN/company networks).
+# Needs Python 3.10+; older Python just keeps its normal checking.
+"$PY" -m pip install --user --quiet --disable-pip-version-check --upgrade truststore >/dev/null 2>&1 || true
 
 "$PY" wizard.py
 

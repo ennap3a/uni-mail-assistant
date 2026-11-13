@@ -6,6 +6,7 @@ import sys
 import time
 import webbrowser
 
+import net  # noqa: F401  (secure certificate checking)
 import secrets_store
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -125,7 +126,12 @@ def main():
         print("  (Apple Reminders needs a Mac – using Telegram.)")
     print("  Telegram works on every phone (iPhone + Android). Note: Telegram can technically read bot messages.")
     if yes("Use Telegram?", out["telegram"].get("enabled") or not secrets_store.IS_MAC):
-        telegram_setup(cfg)
+        try:
+            telegram_setup(cfg)
+        except Exception as e:
+            out["telegram"]["enabled"] = False
+            print("  ❌ Telegram could not be set up: %s" % e)
+            print("  Telegram stays off for now – fix the problem and run the setup again. Continuing…")
     else:
         out["telegram"]["enabled"] = False
     save(cfg)
@@ -183,3 +189,5 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         sys.exit("\nCancelled. Run setup again any time.")
+    except Exception as e:  # show a clear message, not a Python error dump
+        sys.exit("\n❌ Setup stopped: %s\nYour answers so far are saved – run the setup again to continue." % e)

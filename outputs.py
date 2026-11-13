@@ -88,7 +88,7 @@ def ics(title, notes, day, time_, alerts):
                 "DTEND;VALUE=DATE:%s" % (d + dt.timedelta(days=1)).strftime("%Y%m%d")]
         alerts = [a - 9 * 60 for a in alerts]  # all-day: ring at 9:00
     lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Uni Mail Assistant//EN", "BEGIN:VEVENT",
-             "UID:" + uid, "DTSTAMP:" + dt.datetime.utcnow().strftime("%Y%m%dT%H%M%SZ"), *span,
+             "UID:" + uid, "DTSTAMP:" + dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ"), *span,
              "SUMMARY:" + fold(title), "DESCRIPTION:" + fold(notes)]
     for a in alerts:
         trigger = "-PT%dM" % a if a >= 0 else "PT%dM" % -a

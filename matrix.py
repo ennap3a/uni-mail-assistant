@@ -39,8 +39,14 @@ def base_url(con):
 def api(con, path, params=None):
     url = base_url(con) + path + ("?" + urllib.parse.urlencode(params) if params else "")
     req = urllib.request.Request(url, headers={"Authorization": "Bearer " + token()})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return json.load(r)
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return json.load(r)
+    except Exception as e:
+        import net
+        if net.is_cert_error(e):
+            raise RuntimeError("Matrix: " + net.CERT_HELP)
+        raise
 
 
 def whoami(con=None):

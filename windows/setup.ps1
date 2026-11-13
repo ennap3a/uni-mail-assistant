@@ -26,9 +26,11 @@ if (-not $Py) {
 Set-Content -Path ".python-path" -Value $Py -Encoding ASCII
 Write-Host "  OK  Python: $Py"
 
-# ---- 2. keyring (for Windows Credential Manager)
-& $Py -m pip install --user --quiet --disable-pip-version-check keyring
-if ($LASTEXITCODE -ne 0) { Write-Host "Could not install 'keyring'. Check your internet connection." -ForegroundColor Red; exit 1 }
+# ---- 2. keyring (Windows Credential Manager) + truststore (use Windows' own certificate checking,
+#         needed on PCs with antivirus HTTPS scanning, company/school networks or VPNs)
+& $Py -m pip install --user --quiet --disable-pip-version-check --upgrade keyring truststore
+if ($LASTEXITCODE -ne 0) { Write-Host "Could not install 'keyring'/'truststore'. Check your internet connection." -ForegroundColor Red; exit 1 }
+Write-Host "  OK  Secure password storage and certificate checking installed"
 
 # ---- 3. questions
 & $Py wizard.py

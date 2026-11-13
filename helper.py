@@ -25,6 +25,7 @@ import time
 import urllib.error
 import urllib.request
 
+import net  # noqa: F401  (must come first: secure certificate checking)
 import secrets_store
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -176,7 +177,12 @@ def body_text(plain, htm):
 
 def imap_connect(acc):
     user, pw = secrets_store.get_login(acc["keychain"])
-    m = imaplib.IMAP4_SSL(acc["imap_server"], acc.get("imap_port", 993), timeout=60)
+    try:  # always verify the server certificate (Python doesn't do this for IMAP by default)
+        m = imaplib.IMAP4_SSL(acc["imap_server"], acc.get("imap_port", 993), ssl_context=net.context(), timeout=60)
+    except Exception as e:
+        if net.is_cert_error(e):
+            raise RuntimeError("%s: %s" % (acc["name"], net.CERT_HELP))
+        raise RuntimeError("%s: cannot reach mail server %s (%s)" % (acc["name"], acc["imap_server"], e))
     try:
         m.login(user, pw)
     except imaplib.IMAP4.error:
@@ -265,6 +271,8 @@ def gemini(prompt, want_json=True):
                     quota_hits += 1
                     break
             except Exception as e:
+                if net.is_cert_error(e):
+                    raise RuntimeError("Gemini: " + net.CERT_HELP)
                 last = "%s: %s" % (model, e)
             time.sleep(5 * (attempt + 1))
     if quota_hits == len(CFG["gemini_models"]):

@@ -10,6 +10,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+import net
+
 API = "https://api.telegram.org/bot%s/%s"
 MAX_LEN = 4000
 
@@ -35,6 +37,10 @@ class Bot:
             if e.code == 401:
                 raise RuntimeError("Telegram rejected the bot token (run setup again).")
             raise RuntimeError("Telegram error %s %s" % (e.code, desc))
+        except Exception as e:
+            if net.is_cert_error(e):
+                raise RuntimeError("Telegram: " + net.CERT_HELP)
+            raise RuntimeError("Telegram not reachable: %s" % getattr(e, "reason", e))
         if not res.get("ok"):
             raise RuntimeError("Telegram error: %s" % res.get("description"))
         return res["result"]
@@ -81,8 +87,13 @@ class Bot:
         parts.append(("--%s--\r\n" % boundary).encode())
         req = urllib.request.Request(API % (self.token, "sendDocument"), data=b"".join(parts),
                                      headers={"Content-Type": "multipart/form-data; boundary=%s" % boundary})
-        with urllib.request.urlopen(req, timeout=60) as r:
-            return json.load(r)
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                return json.load(r)
+        except Exception as e:
+            if net.is_cert_error(e):
+                raise RuntimeError("Telegram: " + net.CERT_HELP)
+            raise
 
     # ------------------------------------------------------------ receiving
     def updates(self, offset=None, timeout=0):
