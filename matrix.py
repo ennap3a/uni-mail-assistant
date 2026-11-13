@@ -17,7 +17,8 @@ MCFG = helper.CFG.get("matrix", {})
 
 
 def token():
-    return helper.keychain_secret(MCFG.get("keychain", "matrix-token"))
+    import secrets_store
+    return secrets_store.get_secret(MCFG.get("keychain", "unimail-matrix"))
 
 
 def base_url(con):

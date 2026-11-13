@@ -1,15 +1,31 @@
 {
   "university": "OVGU Magdeburg (Germany)",
-
   "accounts": [
-    {"name": "Uni", "enabled": true, "imap_server": "cyrus.ovgu.de", "imap_port": 993,
-     "keychain": "unimail-uni", "reminders_list": "Uni – reminders"},
-    {"name": "Gmail", "enabled": false, "imap_server": "imap.gmail.com", "imap_port": 993,
-     "keychain": "unimail-gmail-1", "reminders_list": "Gmail – reminders"},
-    {"name": "Gmail 2", "enabled": false, "imap_server": "imap.gmail.com", "imap_port": 993,
-     "keychain": "unimail-gmail-2", "reminders_list": "Gmail – reminders"}
+    {
+      "name": "Uni",
+      "enabled": true,
+      "imap_server": "cyrus.ovgu.de",
+      "imap_port": 993,
+      "keychain": "unimail-uni",
+      "reminders_list": "Uni – reminders"
+    },
+    {
+      "name": "Gmail",
+      "enabled": false,
+      "imap_server": "imap.gmail.com",
+      "imap_port": 993,
+      "keychain": "unimail-gmail-1",
+      "reminders_list": "Gmail – reminders"
+    },
+    {
+      "name": "Gmail 2",
+      "enabled": false,
+      "imap_server": "imap.gmail.com",
+      "imap_port": 993,
+      "keychain": "unimail-gmail-2",
+      "reminders_list": "Gmail – reminders"
+    }
   ],
-
   "matrix": {
     "enabled": false,
     "server": "matrix.example.org",
@@ -17,14 +33,26 @@
     "rooms": [],
     "reminders_list": "Matrix – reminders"
   },
-
-  "gemini_models": ["gemini-flash-lite-latest", "gemini-flash-latest"],
+  "outputs": {
+    "apple_reminders": true,
+    "telegram": {
+      "enabled": false,
+      "keychain": "unimail-telegram",
+      "chat_id": null,
+      "listen": true
+    }
+  },
+  "gemini_models": [
+    "gemini-flash-lite-latest",
+    "gemini-flash-latest"
+  ],
   "batch_size": 10,
-
   "first_sync_days": 14,
   "resync_days": 3,
-
-  "remind_for_importance": ["high", "medium"],
+  "remind_for_importance": [
+    "high",
+    "medium"
+  ],
   "confirm_list": "Uni – to confirm",
   "digest_list": "Daily summary",
   "calendars": {
@@ -35,15 +63,30 @@
     "task": "Uni Deadlines"
   },
   "alerts_minutes": {
-    "exam": [1440, 120],
-    "appointment": [1440, 120],
-    "deadline": [4320, 1440],
-    "payment": [4320, 1440],
-    "task": [1440]
+    "exam": [
+      1440,
+      120
+    ],
+    "appointment": [
+      1440,
+      120
+    ],
+    "deadline": [
+      4320,
+      1440
+    ],
+    "payment": [
+      4320,
+      1440
+    ],
+    "task": [
+      1440
+    ]
   },
-
   "reply_reminder_after_days": 2,
   "digest_hour": 8,
-
-  "skip_ai_for_senders": ["unidays"]
+  "skip_ai_for_senders": [
+    "unidays"
+  ],
+  "gemini_keychain": "unimail-gemini"
 }
